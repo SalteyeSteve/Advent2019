@@ -47,5 +47,4 @@ for ($input1 = 0; $input1 < 100; $input1++) {
     }
 }
 
-
 highlight_file('day2.php');
