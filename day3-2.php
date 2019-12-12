@@ -6,6 +6,7 @@ $wires = [
 
 $path = [[]];
 $intersectionArray = [];
+$stepCounter = 0;
 $x = 0;
 $y = 0;
 $i = 0;
@@ -15,12 +16,13 @@ $count = count($wires[0]);
 while($i <= $count) {
     if ($i === $count) {
         if ($overwriteMode) {
-            unset($intersectionArray[min($intersectionArray)]);
-            die('Execution complete, your result: '.min($intersectionArray));
+            unset($intersectionArray[0]);
+            die('Execution finished, your result is: '.min($intersectionArray));
         }
         $i = 0;
         $x = 0;
         $y = 0;
+        $stepCounter = 0;
         $overwriteMode = 1;
         continue;
     }
@@ -32,50 +34,60 @@ while($i <= $count) {
         case 'U':
             $nextPos = $y + $amount;
             while ($y < $nextPos) {
-                findIntersection($x, $y,$overwriteMode);
+                findIntersection($x, $y, $stepCounter, $overwriteMode);
+                $stepCounter++;
                 $y++;
             }
             break;
         case 'R':
             $nextPos = $x + $amount;
             while ($x < $nextPos) {
-                findIntersection($x, $y,$overwriteMode);
+                findIntersection($x, $y, $stepCounter, $overwriteMode);
+                $stepCounter++;
                 $x++;
             }
             break;
         case 'L':
             $nextPos = $x - $amount;
             while ($x > $nextPos) {
-                findIntersection($x, $y,$overwriteMode);
+                findIntersection($x, $y, $stepCounter, $overwriteMode);
+                $stepCounter++;
                 $x--;
             }
             break;
         case 'D':
             $nextPos = $y - $amount;
             while ($y > $nextPos) {
-                findIntersection($x, $y,$overwriteMode);
+                findIntersection($x, $y, $stepCounter, $overwriteMode);
                 $y--;
+                $stepCounter++;
             }
             break;
     }
     $i++;
 }
 
-function findIntersection($x, $y, $overwriteMode)
-{
+function findIntersection($x, $y, $stepCounter, $overwriteMode) {
     global $intersectionArray;
     global $path;
 
-    $intersectionCondition = $path[$x][$y] ?? 0;
+    $intersectionCondition = $path[$x][$y][0] ?? 0;
+    $previousWireSteps = $path[$x][$y][1] ?? 0;
 
     if ($overwriteMode) {
-        if ($intersectionCondition === 1) {
-            $path[$x][$y] = 3;
-            array_push($intersectionArray, (abs($x) + abs($y)));
+        if ($intersectionCondition === 2 && ($stepCounter + $previousWireSteps) > $previousWireSteps) {
+            $path[$x][$y] = [2, $previousWireSteps];
+        } else if ($intersectionCondition === 1) {
+            $path[$x][$y] = [3, $stepCounter + $previousWireSteps];
+            $intersectionArray[abs($x) + abs($y)] = $stepCounter + $previousWireSteps;
         } else {
-            $path[$x][$y] = 2;
+            $path[$x][$y] = [2, $stepCounter];
         }
     } else {
-        $path[$x][$y] = 1;
+        if ($intersectionCondition === 1 && ($stepCounter + $previousWireSteps) > $previousWireSteps) {
+            $path[$x][$y] = [1, $previousWireSteps];
+        } else {
+            $path[$x][$y] = [1, $stepCounter];
+        }
     }
 }
