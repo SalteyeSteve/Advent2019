@@ -16,6 +16,7 @@ while($i <= $count) {
     if ($i === $count) {
         if ($overwriteMode) {
             unset($intersectionArray[min($intersectionArray)]);
+            highlight_file('day3.php');
             die('Execution complete, your result: '.min($intersectionArray));
         }
         $i = 0;
@@ -67,6 +68,7 @@ function findIntersection($x, $y, $overwriteMode)
     global $path;
 
     $intersectionCondition = $path[$x][$y] ?? 0;
+
 
     if ($overwriteMode) {
         if ($intersectionCondition === 1) {
