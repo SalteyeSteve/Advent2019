@@ -1,38 +1,34 @@
 <?php
-
 $inputMin = 307237;
 $inputMax = 769058;
 $viableCodes = [];
-$isViable = false;
-$isDouble = false;
-
 
 for ($code = $inputMin; $code <= $inputMax; $code++) {
     $checkThis = (string)$code;
     $isViable = false;
     $isDouble = false;
-    $doubles = [];
+    $prevNum = 0;
     for($i = 0; $i < strlen($checkThis); $i++) {
-        if (isset($checkThis[$i + 1]) && (int)$checkThis[$i + 1] < (int)$checkThis[$i]) {
-            break;
-        }
-        if (!$isDouble && isset($checkThis[$i + 2])) {
-            if (isset($checkThis[$i + 1]) && (int)$checkThis[$i] === (int)$checkThis[$i + 1]) {
+        if (isset($checkThis[$i + 1])) {
+            $nextNum = (int)$checkThis[$i + 1];
+            $currentNum = (int)$checkThis[$i];
 
-                $isDouble = true;
-                $isViable = true;
+            if($nextNum < $currentNum) {
+                $isViable = false;
+                break;
             }
-        } else {
-            $isDouble = true;
-            $isViable = true;
+            if ($currentNum === $nextNum && $currentNum > $prevNum) {
+                if (!isset($checkThis[$i + 2]) || (int)$checkThis[$i + 2] > $currentNum) {
+                    $isDouble = true;
+                }
+            }
+            $prevNum = $currentNum;
         }
-
+        $isViable = true;
     }
     if ($isViable && $isDouble) {
         array_push($viableCodes, $code);
     }
 }
-echo '<pre>';
-print_r($viableCodes);
-echo '</pre>';
+highlight_file('day4-2.php');
 die('Execution complete, result: '.count($viableCodes));

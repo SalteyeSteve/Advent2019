@@ -24,5 +24,5 @@ for ($code = $inputMin; $code <= $inputMax; $code++) {
         array_push($viableCodes, $code);
     }
 }
-
+highlight_file('day4.php');
 die('Execution complete, result: '.count($viableCodes));
