@@ -7,6 +7,7 @@ $phase = 0;
 $nextInput = '';
 
 do {
+    $nextInput = '';
     for ($outputPointer = 1; $outputPointer <= count(str_split($input)); $outputPointer++) {
         $result = 0;
         $pattern = calculatePatern($outputPointer);
@@ -26,7 +27,7 @@ do {
     $phase++;
 }
 while ($phase < 100);
-echo 'Result '.$phase;
+echo 'Result '.substr($input, 0, 8);
 
 function calculatePatern ($increment) {
     $pattern = [0, 1, 0, -1];
@@ -42,4 +43,3 @@ function calculatePatern ($increment) {
     array_push($newPattern, $unset);
     return $newPattern;
 }
-// 44934838 > answer < 76637981
